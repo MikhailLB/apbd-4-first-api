@@ -2,14 +2,12 @@ using FirstCrudApi.Models;
 
 namespace FirstCrudApi.Data;
 
-/// <summary> Statyczne listy danych w pamięci aplikacji (bez bazy SQL). </summary>
 public static class MagazynDanych
 {
     public static List<Room> Sale { get; } = new();
 
     public static List<Reservation> Rezerwacje { get; } = new();
 
-    /// <summary> Wywołaj raz przy starcie aplikacji — wstawia przykładowe rekordy. </summary>
     public static void Inicjalizuj()
     {
         Sale.Clear();
@@ -145,7 +143,6 @@ public static class MagazynDanych
     public static int NastepneIdRezerwacji() =>
         Rezerwacje.Count == 0 ? 1 : Rezerwacje.Max(r => r.Id) + 1;
 
-    /// <summary> Czy dwa przedziały czasu nakładają się (ten sam dzień, ta sama sala). Kolejne rezerwacji „back-to-back” są dozwolone. </summary>
     public static bool CzyNakladanieCzasowe(int roomId, DateOnly date, TimeOnly start, TimeOnly end, int? pominIdRezerwacji = null)
     {
         return Rezerwacje.Any(r =>

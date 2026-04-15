@@ -4,20 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FirstCrudApi.Controllers;
 
-/// <summary>
-/// Zarządza rezerwacjami sal dydaktycznych.
-/// Atrybut [ApiController] automatycznie zwraca 400 Bad Request,
-/// gdy dane wejściowe nie przejdą walidacji Data Annotations.
-/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class ReservationsController : ControllerBase
 {
-    /// <summary>
-    /// Zwraca wszystkie rezerwacje lub przefiltrowane wg parametrów query stringu.
-    /// GET /api/reservations
-    /// GET /api/reservations?date=2026-05-10&amp;status=confirmed&amp;roomId=2
-    /// </summary>
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<Reservation>), StatusCodes.Status200OK)]
     public ActionResult<IEnumerable<Reservation>> PobierzWszystkie(
@@ -39,10 +29,6 @@ public class ReservationsController : ControllerBase
         return Ok(wynik.ToList());
     }
 
-    /// <summary>
-    /// Zwraca pojedynczą rezerwację po identyfikatorze.
-    /// GET /api/reservations/1
-    /// </summary>
     [HttpGet("{id:int}")]
     [ProducesResponseType(typeof(Reservation), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -55,14 +41,6 @@ public class ReservationsController : ControllerBase
         return Ok(rezerwacja);
     }
 
-    /// <summary>
-    /// Tworzy nową rezerwację. Dane przesyłane w body żądania jako JSON.
-    /// POST /api/reservations
-    /// Reguły biznesowe:
-    ///   - sala musi istnieć (404),
-    ///   - sala musi być aktywna (400),
-    ///   - rezerwacja nie może kolidować z inną tego samego dnia (409).
-    /// </summary>
     [HttpPost]
     [ProducesResponseType(typeof(Reservation), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -86,10 +64,6 @@ public class ReservationsController : ControllerBase
         return CreatedAtAction(nameof(PobierzPoId), new { id = rezerwacja.Id }, rezerwacja);
     }
 
-    /// <summary>
-    /// Aktualizuje istniejącą rezerwację (pełna aktualizacja, nie częściowa).
-    /// PUT /api/reservations/1
-    /// </summary>
     [HttpPut("{id:int}")]
     [ProducesResponseType(typeof(Reservation), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -118,10 +92,6 @@ public class ReservationsController : ControllerBase
         return Ok(rezerwacja);
     }
 
-    /// <summary>
-    /// Usuwa rezerwację.
-    /// DELETE /api/reservations/1
-    /// </summary>
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

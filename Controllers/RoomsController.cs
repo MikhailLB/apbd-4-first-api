@@ -4,20 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FirstCrudApi.Controllers;
 
-/// <summary>
-/// Zarządza salami dydaktycznymi centrum szkoleniowego.
-/// Atrybut [ApiController] automatycznie zwraca 400 Bad Request,
-/// gdy dane wejściowe nie przejdą walidacji Data Annotations.
-/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class RoomsController : ControllerBase
 {
-    /// <summary>
-    /// Zwraca wszystkie sale lub przefiltrowane wg parametrów query stringu.
-    /// GET /api/rooms
-    /// GET /api/rooms?minCapacity=20&amp;hasProjector=true&amp;activeOnly=true
-    /// </summary>
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<Room>), StatusCodes.Status200OK)]
     public ActionResult<IEnumerable<Room>> PobierzWszystkie(
@@ -39,11 +29,6 @@ public class RoomsController : ControllerBase
         return Ok(wynik.ToList());
     }
 
-    /// <summary>
-    /// Zwraca sale z wybranego budynku. buildingCode pobierany z trasy (route).
-    /// GET /api/rooms/building/A
-    /// WAŻNE: ta trasa musi być PRZED {id:int}, inaczej router może ją pomylić.
-    /// </summary>
     [HttpGet("building/{buildingCode}")]
     [ProducesResponseType(typeof(IEnumerable<Room>), StatusCodes.Status200OK)]
     public ActionResult<IEnumerable<Room>> PobierzWedlugBudynku([FromRoute] string buildingCode)
@@ -55,10 +40,6 @@ public class RoomsController : ControllerBase
         return Ok(lista);
     }
 
-    /// <summary>
-    /// Zwraca pojedynczą salę po identyfikatorze.
-    /// GET /api/rooms/1
-    /// </summary>
     [HttpGet("{id:int}")]
     [ProducesResponseType(typeof(Room), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -71,11 +52,6 @@ public class RoomsController : ControllerBase
         return Ok(sala);
     }
 
-    /// <summary>
-    /// Dodaje nową salę. Dane sali przesyłane w body żądania jako JSON.
-    /// POST /api/rooms
-    /// Zwraca 201 Created z nagłówkiem Location wskazującym na nowy zasób.
-    /// </summary>
     [HttpPost]
     [ProducesResponseType(typeof(Room), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -87,10 +63,6 @@ public class RoomsController : ControllerBase
         return CreatedAtAction(nameof(PobierzPoId), new { id = sala.Id }, sala);
     }
 
-    /// <summary>
-    /// Aktualizuje wszystkie dane sali (pełna aktualizacja, nie częściowa).
-    /// PUT /api/rooms/1
-    /// </summary>
     [HttpPut("{id:int}")]
     [ProducesResponseType(typeof(Room), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -108,10 +80,6 @@ public class RoomsController : ControllerBase
         return Ok(sala);
     }
 
-    /// <summary>
-    /// Usuwa salę. Zwraca 409 Conflict, jeśli sala ma powiązane rezerwacje.
-    /// DELETE /api/rooms/1
-    /// </summary>
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

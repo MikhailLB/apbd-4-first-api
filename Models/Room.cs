@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FirstCrudApi.Models;
 
-/// <summary> Sala dydaktyczna w centrum szkoleniowym. </summary>
 public class Room
 {
     public int Id { get; set; }
