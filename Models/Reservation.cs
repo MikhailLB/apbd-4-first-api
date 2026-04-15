@@ -7,33 +7,41 @@ public class Reservation : IValidatableObject
 {
     public int Id { get; set; }
 
-    [Range(1, int.MaxValue, ErrorMessage = "Identyfikator sali musi być poprawny.")]
+    [Range(1, int.MaxValue, ErrorMessage = "Identyfikator sali musi być liczbą większą od zera.")]
     public int RoomId { get; set; }
 
     [Required(ErrorMessage = "Imię i nazwisko organizatora jest wymagane.")]
-    [MinLength(1, ErrorMessage = "Imię i nazwisko organizatora nie może być puste.")]
     public string OrganizerName { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Temat jest wymagany.")]
-    [MinLength(1, ErrorMessage = "Temat nie może być pusty.")]
+    [Required(ErrorMessage = "Temat rezerwacji jest wymagany.")]
     public string Topic { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Data jest wymagana.")]
+    /// <summary>
+    /// Data rezerwacji w formacie YYYY-MM-DD.
+    /// [Required] nie działa na struct, więc walidacja daty odbywa się przez IValidatableObject.
+    /// </summary>
     public DateOnly Date { get; set; }
 
-    [Required(ErrorMessage = "Godzina rozpoczęcia jest wymagana.")]
+    /// <summary> Godzina rozpoczęcia w formacie HH:mm:ss. </summary>
     public TimeOnly StartTime { get; set; }
 
-    [Required(ErrorMessage = "Godzina zakończenia jest wymagana.")]
+    /// <summary> Godzina zakończenia w formacie HH:mm:ss. Musi być późniejsza niż StartTime. </summary>
     public TimeOnly EndTime { get; set; }
 
-    /// <summary> Np. planned, confirmed, cancelled. </summary>
-    [Required(ErrorMessage = "Status jest wymagany.")]
-    [MinLength(1, ErrorMessage = "Status nie może być pusty.")]
+    /// <summary> Status rezerwacji: planned, confirmed lub cancelled. </summary>
+    [Required(ErrorMessage = "Status rezerwacji jest wymagany.")]
     public string Status { get; set; } = string.Empty;
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
+        if (Date == default)
+        {
+            yield return new ValidationResult(
+                "Data rezerwacji jest wymagana.",
+                new[] { nameof(Date) });
+            yield break;
+        }
+
         if (EndTime <= StartTime)
         {
             yield return new ValidationResult(
